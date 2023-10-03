@@ -53,6 +53,19 @@ public:
             undoStack.pop_back();
         }
     }
+
+    void redo() {
+        if (!redoStack.empty()) {
+            undoStack.push_back(lines);
+            lines = redoStack.back();
+            redoStack.pop_back();
+        }
+    }
+    void print() const {
+        for (const Line& line : lines) {
+            std::cout << line.data << std::endl;
+        }
+    }
 };
 
 int main() {
@@ -92,6 +105,17 @@ int main() {
 
             case 4: {
                 textEditor.undo();
+            }
+                break;
+
+            case 5: {
+                textEditor.redo();
+            }
+                break;
+
+            case 6: {
+                std::cout << "Current text:" << std::endl;
+                textEditor.print();
             }
                 break;
 
