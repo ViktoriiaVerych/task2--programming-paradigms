@@ -36,6 +36,15 @@ public:
         lines.insert(lines.begin() + cursorLine, Line());
         cursorIndex = 0;
     }
+
+    void deleteText(size_t line, size_t index, size_t length) {
+        undoStack.push_back(lines);
+        if (line < lines.size() && index < lines[line].data.length()) {
+            lines[line].data.erase(index, length);
+            cursorLine = line;
+            cursorIndex = index;
+        }
+    }
 };
 
 int main() {
@@ -63,6 +72,14 @@ int main() {
 
             case 2:{
                 textEditor.startNewLine();}
+                break;
+
+            case 3: {
+                std::cout << "Choose line, index, and number of symbols to delete: ";
+                size_t line, index, length;
+                std::cin >> line >> index >> length;
+                textEditor.deleteText(line, index, length);
+            }
                 break;
 
 
