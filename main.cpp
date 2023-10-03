@@ -24,12 +24,19 @@ public:
         cursorIndex = 0;
     }
 
-    void appendText(const std::string& text) {
+    void appendText(const std::string &text) {
         undoStack.push_back(lines);
         lines[cursorLine].data.insert(cursorIndex, text);
         cursorIndex += text.length();
     }
 
+    void startNewLine() {
+        undoStack.push_back(lines);
+        cursorLine++;
+        lines.insert(lines.begin() + cursorLine, Line());
+        cursorIndex = 0;
+    }
+};
 
 int main() {
     TextEditor textEditor;
@@ -52,6 +59,10 @@ int main() {
                 std::cin.ignore();
                 std::getline(std::cin, appendText);
                 textEditor.appendText(appendText);}
+                break;
+
+            case 2:{
+                textEditor.startNewLine();}
                 break;
 
 
