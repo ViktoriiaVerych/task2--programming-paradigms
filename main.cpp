@@ -45,6 +45,14 @@ public:
             cursorIndex = index;
         }
     }
+
+    void undo() {
+        if (!undoStack.empty()) {
+            redoStack.push_back(lines);
+            lines = undoStack.back();
+            undoStack.pop_back();
+        }
+    }
 };
 
 int main() {
@@ -79,6 +87,11 @@ int main() {
                 size_t line, index, length;
                 std::cin >> line >> index >> length;
                 textEditor.deleteText(line, index, length);
+            }
+                break;
+
+            case 4: {
+                textEditor.undo();
             }
                 break;
 
