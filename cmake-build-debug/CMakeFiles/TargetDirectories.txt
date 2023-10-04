@@ -1,0 +1,3 @@
+C:/Users/Admin/CLionProjects/task3--paradigms/cmake-build-debug/CMakeFiles/task3__paradigms.dir
+C:/Users/Admin/CLionProjects/task3--paradigms/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Admin/CLionProjects/task3--paradigms/cmake-build-debug/CMakeFiles/rebuild_cache.dir

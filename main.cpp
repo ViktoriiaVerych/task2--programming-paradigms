@@ -15,6 +15,7 @@ private:
     size_t cursorIndex;
     std::vector<std::vector<Line>> undoStack;
     std::vector<std::vector<Line>> redoStack;
+    std::string clipboard;
 
 public:
     // Constructor to initialize the text editor with one empty line
@@ -61,6 +62,37 @@ public:
             redoStack.pop_back();
         }
     }
+
+    void cut(size_t line, size_t index, size_t length) {
+        if (line < lines.size() && index < lines[line].data.length()) {
+            clipboard = lines[line].data.substr(index, length);
+            lines[line].data.erase(index, length);
+            cursorLine = line;
+            cursorIndex = index;
+        }
+    }
+
+    void copy(size_t line, size_t index, size_t length) {
+        if (line < lines.size() && index < lines[line].data.length()) {
+            clipboard = lines[line].data.substr(index, length);
+        }
+    }
+
+    void paste() {
+        undoStack.push_back(lines);
+        lines[cursorLine].data.insert(cursorIndex, clipboard);
+        cursorIndex += clipboard.length();
+    }
+
+    void insertWithReplacement(size_t line, size_t index, const std::string &text) {
+        undoStack.push_back(lines);
+        if (line < lines.size() && index < lines[line].data.length()) {
+            lines[line].data.replace(index, text.length(), text);
+            cursorLine = line;
+            cursorIndex = index;
+        }
+    }
+
     void print() const {
         for (const Line& line : lines) {
             std::cout << line.data << std::endl;
@@ -78,6 +110,10 @@ int main() {
         std::cout << "4| Undo" << std::endl;
         std::cout << "5| Redo" << std::endl;
         std::cout << "6| Print the current text to console" << std::endl;
+        std::cout << "7| Cut" << std::endl;
+        std::cout << "8| Copy" << std::endl;
+        std::cout << "9| Paste" << std::endl;
+        std::cout << "10| Insert with replacement" << std::endl;
 
         int command = 2;
         std::cin >> command;
@@ -119,6 +155,39 @@ int main() {
             }
                 break;
 
+            case 7: {
+                std::cout << "Choose line, index, and number of symbols to cut: ";
+                size_t line, index, length;
+                std::cin >> line >> index >> length;
+                textEditor.cut(line, index, length);
+            }
+                break;
+
+            case 8: {
+                std::cout << "Choose line, index, and number of symbols to copy: ";
+                size_t line, index, length;
+                std::cin >> line >> index >> length;
+                textEditor.copy(line, index, length);
+            }
+                break;
+
+            case 9: {
+                textEditor.paste();
+            }
+                break;
+
+            case 10: {
+                std::cout << "Choose line and index: ";
+                size_t line, index;
+                std::cin >> line >> index;
+                std::cout << "Write text: ";
+                std::string replacementText;
+                std::cin.ignore();
+                std::getline(std::cin, replacementText);
+                textEditor.insertWithReplacement(line, index, replacementText);
+            }
+                break;
+
 
             default: {
                 std::cout << "The command is not chosen." << std::endl;
@@ -129,4 +198,3 @@ int main() {
 
     return 0;
 }
-
